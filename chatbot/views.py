@@ -1,4 +1,7 @@
 from openai import OpenAI
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from django.http import JsonResponse
 import os
 
 
@@ -26,6 +29,7 @@ def ask_favorite_food():
     )
 
     question = response.choices[0].message.content
+    print(question)
     return question
 
 
@@ -47,4 +51,16 @@ def answer_favorite_food(question):
     )
 
     answer = response.choices[0].message.content
+    print(answer)
     return answer
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def simulate_conversation(request):
+    question = ask_favorite_food()
+    answer = answer_favorite_food(question)
+    return JsonResponse({
+        "question": question,
+        "answer": answer
+    })

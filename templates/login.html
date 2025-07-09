@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+    }
+    #output {
+      margin-top: 1.5rem;
+      white-space: pre-wrap;
+      background: #f3f3f3;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h2>Login</h2>
+  <form id="login-form">
+    <label>Username: <input type="text" id="username"></label><br>
+    <label>Password: <input type="password" id="password"></label><br>
+    <button type="submit">Login</button>
+  </form>
+
+  <button id="call-api">Run Simulation</button>
+
+  <pre id="output">Simulation result will appear here...</pre>
+
+  <script>
+    let token = '';
+
+    document.getElementById("login-form").onsubmit = async function (e) {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      const response = await fetch("/api/token/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await response.json();
+      token = data.access;
+
+      document.getElementById("output").innerText = "Login successful. Token acquired.";
+    };
+
+    document.getElementById("call-api").onclick = async function () {
+      const output = document.getElementById("output");
+      output.innerText = "Running simulation...";
+
+      const response = await fetch("/chatbot/simulate_conversation/", {
+        headers: { "Authorization": "Bearer " + token }
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        output.innerText = `Error: ${response.status} ${response.statusText}\n\n${errorText}`;
+        return;
+      }
+
+      const data = await response.json();
+      output.innerHTML = `<strong>Q:</strong> ${data.question}<br><strong>A:</strong> ${data.answer}`;
+    };
+  </script>
+</body>
+</html>
