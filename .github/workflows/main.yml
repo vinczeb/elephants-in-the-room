@@ -3,7 +3,7 @@ name: Build and Deploy to Azure Container Apps
 on:
   push:
     branches:
-      - dev # TODO change this to main once deployment works
+      - main
 
 jobs:
   build-and-deploy:
