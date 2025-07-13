@@ -141,8 +141,8 @@ def check_if_vegetarian(foods):
         "'veggie', or similar, assume it is vegetarian.\n\n"
         f"{', '.join(foods)}\n\n"
         "Are all of these foods vegetarian?\n"
-        "Answer only 'Yes' if all items can be made vegetarian in some form. Answer 'No' otherwise."
-    )
+        "Answer only 'Yes' if all items are traditionally vegetarian or include 'veggie', 'vegetarian' or something"
+        " similar in the name. Answer 'No' otherwise.")
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
