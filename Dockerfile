@@ -13,4 +13,4 @@ COPY . .
 
 RUN python manage.py collectstatic --noinput
 
-CMD ["gunicorn", "fav_food_chatbot.wsgi:application", "--bind", "0.0.0.0:8000 --timeout 300"]
+CMD ["gunicorn", "fav_food_chatbot.wsgi:application", "--bind", "0.0.0.0:8000", "--timeout", "300"]
