@@ -17,7 +17,7 @@ def ask_favorite_food():
                 "content": (
                     "You're a helpful assistant. "
                     "Your job is to start the conversation by asking the user what their 3 favorite foods are. "
-                    "Don't include any greetings or filler like 'Hi', 'Hey there', or 'Sure thing'. "
+                    "Don't include any greetings or filler like 'Hi', 'Hey there', or 'Sure thing'.  "
                 )
             },
             {
@@ -36,7 +36,8 @@ def ask_favorite_food():
 def answer_favorite_food(question):
     system_content = (
         "You're a friendly assistant who answers the question about your top 3 favorite foods. "
-        "Give a natural, simple answer listing exactly 3 favorite foods."
+        "Give a natural, simple answer listing exactly 3 favorite foods. The answers "
+        "should be comma separated in the format food1, food2, food3"
     )
 
     messages = [
