@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Run Food Preference Simulation</title>
+  <title>Favorite Food Simulation</title>
   <style>
     body {
       font-family: sans-serif;
@@ -70,7 +70,7 @@
           "Authorization": "Bearer " + token,
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({})  // optional, you can extend to send 'count' if needed
+        body: JSON.stringify({})
       });
 
       if (!response.ok) {
@@ -89,7 +89,7 @@
 
       output.innerHTML = data[key]
         .map((item, idx) =>
-          `#${idx + 1}\n<strong>Q:</strong> ${item.question}\n<strong>A:</strong> ${item.answer}\n<strong>Foods:</strong> ${item.foods.join(', ')}\n<strong>Is ${filterType}:</strong> ${item["is_" + filterType]}\n`
+          `#${idx + 1}\n<strong>Q:</strong> ${item.question}\n<strong>A:</strong> ${item.answer}\nIs ${filterType}:</strong> ${item["is_" + filterType]}\n`
         ).join('\n\n');
     };
   </script>
