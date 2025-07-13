@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login</title>
+  <title>Run Food Preference Simulation</title>
   <style>
     body {
       font-family: sans-serif;
@@ -20,11 +20,17 @@
 <body>
   <h2>Login</h2>
   <form id="login-form">
-    <label>Username: <input type="text" id="username"></label><br>
-    <label>Password: <input type="password" id="password"></label><br>
+    <label>Username: <input type="text" id="username" required></label><br>
+    <label>Password: <input type="password" id="password" required></label><br>
     <button type="submit">Login</button>
   </form>
 
+  <h2>Run Simulation</h2>
+<label for="filter-type">Filter for:</label>
+<select id="filter-type">
+  <option value="vegetarian">Vegetarian</option>
+  <option value="vegan">Vegan</option>
+</select>
   <button id="call-api">Run Simulation</button>
 
   <pre id="output">Simulation result will appear here...</pre>
@@ -44,17 +50,27 @@
       });
 
       const data = await response.json();
-      token = data.access;
-
-      document.getElementById("output").innerText = "Login successful. Token acquired.";
+      if (data.access) {
+        token = data.access;
+        document.getElementById("output").innerText = "Login successful. Token acquired.";
+      } else {
+        document.getElementById("output").innerText = "Login failed. Check credentials.";
+      }
     };
 
     document.getElementById("call-api").onclick = async function () {
       const output = document.getElementById("output");
       output.innerText = "Running simulation...";
 
-      const response = await fetch("/chatbot/simulate_conversation/", {
-        headers: { "Authorization": "Bearer " + token }
+      const filterType = document.getElementById("filter-type").value;
+
+      const response = await fetch(`/chatbot/simulate_conversation/?type=${filterType}`, {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({})  // optional, you can extend to send 'count' if needed
       });
 
       if (!response.ok) {
@@ -64,7 +80,17 @@
       }
 
       const data = await response.json();
-      output.innerHTML = `<strong>Q:</strong> ${data.question}<br><strong>A:</strong> ${data.answer}`;
+      const key = filterType + "_responses";
+
+      if (data[key].length === 0) {
+        output.innerText = `No ${filterType} responses found.`;
+        return;
+      }
+
+      output.innerHTML = data[key]
+        .map((item, idx) =>
+          `#${idx + 1}\n<strong>Q:</strong> ${item.question}\n<strong>A:</strong> ${item.answer}\n<strong>Foods:</strong> ${item.foods.join(', ')}\n<strong>Is ${filterType}:</strong> ${item["is_" + filterType]}\n`
+        ).join('\n\n');
     };
   </script>
 </body>
