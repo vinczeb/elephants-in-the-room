@@ -98,7 +98,7 @@ def simulate_conversation(request):
         results = []
         simulation = Simulation.objects.create()
         print(f"Created simulation with id = {simulation.id}")
-        for i in range(2):
+        for i in range(100):
             print(f"Simulation round {i+1}")
             try:
                 question = ask_favorite_food()
