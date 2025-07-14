@@ -28,7 +28,6 @@ urlpatterns = [
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("", views.login_page, name="login_page"),
     path('chatbot/', include('chatbot.urls')),
-
 ]
 
 

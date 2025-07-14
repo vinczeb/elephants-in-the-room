@@ -1,11 +1,12 @@
 from openai import OpenAI
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
 import os
 from .models import Simulation, FavoriteFoodResponse
 import random
-
+import time
 
 client = OpenAI(api_key=os.getenv("OPENAI_SECRET"))
 
@@ -180,3 +181,17 @@ def check_if_vegan(foods):
     except Exception as e:
         print(f"Failed to tell if {', '.join(foods)} are vegan")
         raise SimulationError(f"Failed to tell if {', '.join(foods)} are vegan") from e
+
+
+@api_view(["GET"])
+def idle_for_three_minutes(request):
+    total_seconds = 360
+    interval = 20
+    print("Starting to idle...")
+
+    for i in range(0, total_seconds, interval):
+        print(f"Still idling, {i} seconds passed")
+        time.sleep(interval)
+
+    print(f"Finished idling after {total_seconds} seconds.")
+    return Response({"message": "Done idling"})
